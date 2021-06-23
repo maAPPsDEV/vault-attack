@@ -16,7 +16,7 @@ _Hint:_
 
 ## What will you learn?
 
-1. `private` doesn't actually mean that the data is hidden/safe & unaccessible.
+1. `private` doesn't actually mean that the data is hidden/safe & unaccessible. 😱
 2. Do not store sensitive data inside contracts.
 
 ## What is the most difficult challenge?
