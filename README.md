@@ -1,39 +1,41 @@
-# Solidity Game - [Game Title] Attack
+# Solidity Game - Valut Attack
 
-_Inspired by OpenZeppelin's [Ethernaut](https://ethernaut.openzeppelin.com), [Game Title] Level_
+_Inspired by OpenZeppelin's [Ethernaut](https://ethernaut.openzeppelin.com), Valut Level_
 
 ⚠️Do not try on mainnet!
 
 ## Task
 
-Hacker the basic token contract below.
-
-1. You are given 20 tokens to start with and you will beat the game if you somehow manage to get your hands on any additional tokens. Preferably a very large amount of tokens.
+_Can you believe, if I say "I can guess your password saved in your contract, even if it's defined as private"?_
+Unlock the vault.
 
 _Hint:_
 
-1. What is an odometer?
+1. Is `private` variable actually **private**?
 
 ## What will you learn?
 
-1. Solidity Security Consideration
-2. **Underflow** and **Overflow** in use of unsigned integers
+1. `private` doesn't actually mean that the data is hidden/safe & unaccessible.
+2. Do not store sensitive data inside contracts.
 
 ## What is the most difficult challenge?
 
-**You won't get success to attack if the target contract has been complied in Solidity 0.8.0 or uppper** 🤔
+1. How to convert JavaScript string to `byte32`?
+   Use [utils.asciiToHex](https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#asciitohex)
 
-> [**Solidity v0.8.0 Breaking Changes**](https://docs.soliditylang.org/en/v0.8.5/080-breaking-changes.html?highlight=underflow#silent-changes-of-the-semantics)
->
-> Arithmetic operations revert on **underflow** and **overflow**. You can use `unchecked { ... }` to use the previous wrapping behaviour.
->
-> Checks for overflow are very common, so we made them the default to increase readability of code, even if it comes at a slight increase of gas costs.
+```
+web3.utils.asciiToHex('I have 100!');
+> "0x4920686176652031303021"
+```
 
-I had tried to do everything in Solidity 0.8.5 at first time, but it didn't work, as it reverted transactions everytime it met underflow.
+2. Can I read the storage of a contract?
+   Use [eth.getStorageAt](https://web3js.readthedocs.io/en/v1.2.0/web3-eth.html#getstorageat)
 
-Finally, I found that Solidity included those checks by defaults while using sliencely more gas.
-
-So, don't you need to use [`SafeMath`](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/SafeMath.sol)?
+```
+web3.eth.getStorageAt("0x407d73d8a49eeb85d32cf465507dd71d507100c1", 0)
+.then(console.log);
+> "0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234"
+```
 
 ## Source Code
 
@@ -41,25 +43,21 @@ So, don't you need to use [`SafeMath`](https://github.com/OpenZeppelin/openzeppe
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity >=0.8.5 <0.9.0;
 
-contract Token {
-  mapping(address => uint256) balances;
-  uint256 public totalSupply;
+contract Vault {
+  bool public locked;
+  bytes32 private password;
 
-  constructor(uint256 _initialSupply) public {
-    balances[msg.sender] = totalSupply = _initialSupply;
+  constructor(bytes32 _password) {
+    locked = true;
+    password = _password;
   }
 
-  function transfer(address _to, uint256 _value) public returns (bool) {
-    require(balances[msg.sender] - _value >= 0);
-    balances[msg.sender] -= _value;
-    balances[_to] += _value;
-    return true;
-  }
-
-  function balanceOf(address _owner) public view returns (uint256 balance) {
-    return balances[_owner];
+  function unlock(bytes32 _password) public {
+    if (password == _password) {
+      locked = false;
+    }
   }
 }
 
@@ -104,7 +102,7 @@ Compiling your contracts...
 
 
   Contract: Hacker
-    √ should steal countless of tokens (377ms)
+    √ should unlock vault (399ms)
 
 
   1 passing (440ms)
