@@ -7,6 +7,7 @@ _Inspired by OpenZeppelin's [Ethernaut](https://ethernaut.openzeppelin.com), Val
 ## Task
 
 _Can you believe, if I say "I can guess your password saved in your contract, even if it's defined as private"?_
+
 Unlock the vault.
 
 _Hint:_
@@ -21,6 +22,7 @@ _Hint:_
 ## What is the most difficult challenge?
 
 1. How to convert JavaScript string to `byte32`?
+   
    Use [utils.asciiToHex](https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#asciitohex)
 
 ```
@@ -29,6 +31,7 @@ web3.utils.asciiToHex('I have 100!');
 ```
 
 2. Can I read the storage of a contract?
+   
    Use [eth.getStorageAt](https://web3js.readthedocs.io/en/v1.2.0/web3-eth.html#getstorageat)
 
 ```
