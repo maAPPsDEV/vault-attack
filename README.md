@@ -91,8 +91,6 @@ truffle develop
 test
 ```
 
-You should take ownership of the target contract successfully.
-
 ```
 truffle(develop)> test
 Using network 'develop'.
